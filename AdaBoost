@@ -1,0 +1,50 @@
+import numpy as np
+
+trainx=[0,1,2,3,4,5,6,7,8,9]
+trainy=[1,1,1,-1,-1,-1,1,1,1,-1]
+
+def AdaBoost(x,y):
+    N=len(x)
+    D=[1/float(N)]*N
+    Dx=[D[i]*x[i] for i in range (len(y))]
+    e,v,G=vselect(Dx,y)
+    alpha=0.5*np.log((1-e)/e))
+    Z=sum([D[i]*np.exp(-alpha*y[i]*G[i]) for i in range(len(y))])
+    D2=[D[i]*np.exp(-alpha*y[i]*G[i]) for i in range(len(y))]
+  
+
+def Basicclassfier(x,v):
+    if x>v:
+        return -1
+    else:
+        return 1
+    
+def vselect(x,y):
+    N=len(x)
+    emin=2
+    vbest=0
+    G=[]
+    for v in np.arange(0,N,0.1):
+        ypredict=[]
+        for item in x:
+            ypredict.append(Basicclassfier(item,v))
+        e=ecount(y,ypredict)
+        if emin>e:
+            emin=e
+            vbest=v
+            G=ypredict
+    return emin,vbest,G
+    
+def ecount(y,ypredict):
+    diff=[y[i] -ypredict[i] for i in range(len(y))]
+    N=len(y)
+    right=0
+    for item in diff:
+        if item==0:
+            right=right+1
+    e=1-right/float(N)
+    return e
+    
+AdaBoost(trainx,trainy)
+            
+        
